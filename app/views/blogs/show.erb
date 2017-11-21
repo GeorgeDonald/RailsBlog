@@ -1,0 +1,7 @@
+<%= session[:dialog_mode] %>
+<% if session[:dialog_mode] === 'signin' %>
+<%= render 'login_form' %>
+<p>entered login mode</p>
+<% end %>
+
+<h1>Show Blogs here</h1>

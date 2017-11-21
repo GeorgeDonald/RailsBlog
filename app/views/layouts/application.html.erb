@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RailsBlog</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <nav>
+      <% if logged_in? %>
+        <h3>Welcome, <%= @user.fullname %></h3>
+        <%= link_to 'Log out', '/logout', {method: 'post', local: true}  %>
+        <%= link_to 'Edit', '/edit', {method: 'post', local: true}  %>
+      <% else %>
+        <%= link_to "Sign up", '/signup', {local: true} %>
+        <%= link_to "Sign in", '/signin', {local: true} %>
+      <% end %>
+    </nav>
+    <%= yield %>
+  </body>
+</html>

@@ -1,0 +1,18 @@
+<div class="login model">
+  <%= form_with(model: @user, local:true) do |f| %>
+    <p id='notice'> <%= notice %> </p>
+    <div class="form_group login_name">
+      <%= f.label :loginname %>
+      <%= f.text_field :loginname %>
+    </div>
+    <div class="form_group login_password">
+      <%= f.label :password %>
+      <%= f.password_field :password %>
+    </div>
+    <div class="form_group login_signin">
+      <input type="hidden" name="" value="">
+      <%= f.submit "Cancel" %>
+      <%= f.submit "Sign in" %>
+    </div>
+  <% end %>
+</div>

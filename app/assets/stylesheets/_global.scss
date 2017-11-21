@@ -1,0 +1,25 @@
+$clrModelBk: rgba(20,20,160,0.8);
+$clrModelFont: white;
+
+.hidden {
+  display: none;
+}
+
+.model {
+  left: 0;
+  top: 0;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 999;
+  background-color: $clrModelBk;
+  color: $clrModelFont;
+}
+
+.login form {
+  position: relative;
+  width: 400px;
+  height: 104px;
+  left: calc( (100vw - 400px) / 2);
+  top: calc( (100vh - 104px) / 2 );
+}
