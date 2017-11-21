@@ -1,16 +1,11 @@
 require 'pry'
 
 class UsersController < ApplicationController
-  def new
-    binding.pry
-    redirect_to '/' if logged_in?
-    @user = User.new
-  end
-
   def create
     if(params[:commit] == 'Cancel')
       session[:dialog_mode] = nil
       redirect_to '/'
+      return
     end
 
     if session[:dialog_mode] === 'signin'
@@ -23,19 +18,44 @@ class UsersController < ApplicationController
         redirect_to '/signin', notice: 'Unknown login name or incrrect password'
       end
     elsif session[:dialog_mode] === 'signup'
+      @user = User.new(signup_params)
+      if( !@user.valid? )
+        redirect_to '/signup', notice: 'Your information is not valid.'
+      elsif !@user.save_file
+        redirect_to '/signup', notice: 'An error occured on saving image file.'
+      elsif !@user.save
+        redirect_to '/signup', notice: 'An error occured on saving your information into database.'
+      else
+        session[:user_id] = @user.id
+        session[:dialog_mode] = nil
+        redirect_to '/'
+      end
+    elsif session[:dialog_mode] === 'edit'
+      user = User.new(signup_params)
+      if( !user.valid? )
+        redirect_to '/signup', notice: 'Your information is not valid.'
+      elsif !user.save_file
+        redirect_to '/signup', notice: 'An error occured on saving image file.'
+      els !@user.save
+        redirect_to '/signup', notice: 'An error occured on saving your information into database.'
+      else
+        session[:user_id] = @user.id
+        session[:dialog_mode] = nil
+        redirect_to '/'
+      end
     else
       session[:dialog_mode] = nil
       redirect_to '/'
     end
   end
 
-  def cancel
-    session[:dialog_mode] = nil
-    redirect_to '/'
-  end
-
   private
   def login_params
+    params.require(:user).permit(:loginname, :password)
+  end
+
+  def signup_params
     params.require(:user).permit(:loginname, :password, :fullname, :image)
   end
+
 end

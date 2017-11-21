@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   get '/', to: 'blogs#show'
   get '/signin', to: 'blogs#signin'
   get '/signup', to: 'blogs#signup'
-  post '/', to: 'users#cancel'
+  get '/logout', to: 'blogs#logout'
+  get '/edit', to: 'blogs#edit'
+
+  patch '/users', to: 'users#create'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

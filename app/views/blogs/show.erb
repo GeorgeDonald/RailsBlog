@@ -1,5 +1,8 @@
 <%= session[:dialog_mode] %>
-<% if session[:dialog_mode] === 'signin' %>
+<% if(session[:dialog_mode] === 'signin' ||
+  session[:dialog_mode] === 'signup' ||
+  session[:dialog_mode] === 'edit' ||
+  session[:dialog_mode] === 'show') %>
 <%= render 'login_form' %>
 <p>entered login mode</p>
 <% end %>

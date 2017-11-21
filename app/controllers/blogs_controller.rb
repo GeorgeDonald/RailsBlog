@@ -3,24 +3,47 @@ require 'pry'
 class BlogsController < ApplicationController
   def show
     current_user
+    session[:dialog_mode] = nil
   end
-  
+
   def signin
-    proc_req("signin")
+    if logged_in?
+      redirect_to '/'
+    else
+      proc_req("signin")
+    end
   end
 
   def signup
-    proc_req("signup")
+    if logged_in?
+      redirect_to '/'
+    else
+      proc_req("signup")
+    end
+  end
+
+  def edit
+    if !logged_in?
+      redirect_to '/'
+    else
+      proc_req("edit")
+    end
+  end
+
+  def logout
+    session[:user_id] = nil
+    @user = nil
+    redirect_to '/'
   end
 
   private
   def proc_req(answer)
-    if !logged_in?
-      session[:dialog_mode] = answer
+    session[:dialog_mode] = answer
+
+    if !@user
       @user = User.new
-      render :show
-    else
-      redirect_to '/'
     end
+
+    render :show
   end
 end
