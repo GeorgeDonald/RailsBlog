@@ -1,26 +1,164 @@
 require 'pry'
 
 class BlogsController < ApplicationController
+  before_action :get_blogs, except: [:create]
+
   def show
     current_user
+    session[:dialog_mode] = nil
   end
-  
+
   def signin
-    proc_req("signin")
+    if logged_in?
+      redirect_to '/'
+    else
+      proc_req("signin")
+    end
   end
 
   def signup
-    proc_req("signup")
+    if logged_in?
+      redirect_to '/'
+    else
+      proc_req("signup")
+    end
+  end
+
+  def edit
+    if !logged_in?
+      redirect_to '/'
+    else
+      proc_req("edit")
+    end
+  end
+
+  def logout
+    session[:user_id] = nil
+    @user = nil
+    redirect_to '/'
+  end
+
+  def write
+    if !logged_in?
+      redirect_to '/'
+    else
+      @blog = Blog.new
+      proc_req("write")
+    end
+  end
+
+  def editblog
+    render :show
+  end
+
+  def create
+    if(params[:commit] === 'Cancel' || !logged_in?)
+      goto_root
+      return
+    end
+
+    if session[:dialog_mode] === "write"
+      on_write_blog
+    elsif session[:dialog_mode] === "editblog"
+      on_edit_blog
+    elsif session[:dialog_mode] === "comment"
+      on_comment_blog
+    else
+      goto_root
+    end
+  end
+
+  def comment
+    if valid_blog?
+      proc_req("comment")
+    end
+  end
+
+  def delete
+    if !valid_blog?(true)
+      return
+    end
+    @blog.destroy
+    goto_root
+  end
+
+  def editblog
+    if !valid_blog?(true)
+      return
+    end
+    session[:blog_id] = params[:id]
+    proc_req("editblog")
   end
 
   private
-  def proc_req(answer)
-    if !logged_in?
-      session[:dialog_mode] = answer
-      @user = User.new
-      render :show
+  def on_write_blog
+    @blog = Blog.new(blog_params)
+    @blog.user_id = session[:user_id]
+
+    if !@blog.save
+      redirect_to '/write', notice: "An error occured while saving the blog."
     else
-      redirect_to '/'
+      goto_root
     end
+  end
+
+  def on_edit_blog
+    if !logged_in? || !session[:blog_id]
+      goto_root
+    end
+
+    @blog = Blog.find_by_id(session[:blog_id])
+    if !@blog || @blog.user_id != @user.id
+      goto_root
+    end
+
+    blog=Blog.new(blog_params)
+    @blog.title = blog.title
+    @blog.contents = blog.contents
+
+    if !@blog.save
+      @blog = Blog.find_by_id(session[:blog_id])
+      redirect_to "/blogs/#{@blog.id}", notice: "An error occured while saving the blog."
+    else
+      session[:blog_id]=nil
+      goto_root
+    end
+  end
+
+  def valid_blog? (req_same = false)
+    if !logged_in?
+      goto_root
+      return false
+    end
+    @blog=Blog.find_by_id(params[:id])
+    if !@blog
+      goto_root
+      return false
+    end
+    if req_same
+      if @user.id != @blog.user_id
+        goto_root
+        return false
+      end
+    end
+    true
+  end
+
+  def get_blogs
+    @blogs =Blog.all
+  end
+
+  def blog_params
+    params.require(:blog).permit(:title, :contents)
+  end
+
+  def proc_req(answer)
+    session[:dialog_mode] = answer
+
+    if !@user
+      @user = User.new
+    end
+
+    render :show
   end
 end

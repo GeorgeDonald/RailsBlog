@@ -1,0 +1,19 @@
+<div class="blog model">
+  <%= form_with(model: @blog, url: '/blogs', local:true) do |f| %>
+    <p id='notice'> <%= notice %> </p>
+
+    <div class="form_group blog_title">
+      <%= f.label "Blog Title: " %><br>
+      <%= f.text_field :title %>
+    </div>
+    <div class="form_group blog_contents">
+      <%= f.label "Contents: " %><br>
+      <%= f.text_area :contents %>
+    </div>
+
+    <div class="form_group blog_submit">
+      <%= f.submit session[:dialog_mode] === "editblog" ? "Update" : 'Post' %>
+      <%= f.submit "Cancel" %>
+    </div>
+  <% end %>
+</div>

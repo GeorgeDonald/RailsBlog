@@ -12,8 +12,9 @@
     <nav>
       <% if logged_in? %>
         <h3>Welcome, <%= @user.fullname %></h3>
-        <%= link_to 'Log out', '/logout', {method: 'post', local: true}  %>
-        <%= link_to 'Edit', '/edit', {method: 'post', local: true}  %>
+        <%= link_to 'Log out', '/logout', {local: true}  %>
+        <%= link_to 'Edit', '/edit', {local: true}  %>
+        <%= link_to 'Write Blog', '/write', {local: true}  %>
       <% else %>
         <%= link_to "Sign up", '/signup', {local: true} %>
         <%= link_to "Sign in", '/signin', {local: true} %>

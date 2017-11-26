@@ -1,18 +1,33 @@
 <div class="login model">
-  <%= form_with(model: @user, local:true) do |f| %>
+  <%= form_with(model: @user, url: '/users', local:true) do |f| %>
     <p id='notice'> <%= notice %> </p>
+
     <div class="form_group login_name">
-      <%= f.label :loginname %>
+      <%= f.label "Login name: " %>
       <%= f.text_field :loginname %>
     </div>
     <div class="form_group login_password">
-      <%= f.label :password %>
+      <%= f.label "Password: " %>
       <%= f.password_field :password %>
     </div>
+
+    <% if(session[:dialog_mode]=='signup'||
+      session[:dialog_mode] === 'edit') %>
+      <div class="form_group signup_fullname">
+        <%= f.label "Full Name: " %>
+        <%= f.text_field :fullname %>
+      </div>
+      <div class="form_group signup_fullname">
+        <%= f.label "Head Shot Picture: " %>
+        <%= f.file_field :image %>
+      </div>
+    <% end %>
+
     <div class="form_group login_signin">
-      <input type="hidden" name="" value="">
+      <%= f.submit session[:dialog_mode] === 'signin' ? "Sign in" :
+        session[:dialog_mode] === 'signup' ? 'Sign up' : 'Update' %>
       <%= f.submit "Cancel" %>
-      <%= f.submit "Sign in" %>
+      <%= f.submit "Unregister Me" if session[:dialog_mode] === 'edit' %>
     </div>
   <% end %>
 </div>
