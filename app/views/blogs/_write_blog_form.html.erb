@@ -12,7 +12,7 @@
     </div>
 
     <div class="form_group blog_submit">
-      <%= f.submit 'Post' %>
+      <%= f.submit session[:dialog_mode] === "editblog" ? "Update" : 'Post' %>
       <%= f.submit "Cancel" %>
     </div>
   <% end %>

@@ -47,6 +47,10 @@ class BlogsController < ApplicationController
     end
   end
 
+  def editblog
+    render :show
+  end
+
   def create
     if(params[:commit] === 'Cancel' || !logged_in?)
       goto_root
@@ -56,7 +60,9 @@ class BlogsController < ApplicationController
     if session[:dialog_mode] === "write"
       on_write_blog
     elsif session[:dialog_mode] === "editblog"
+      on_edit_blog
     elsif session[:dialog_mode] === "comment"
+      on_comment_blog
     else
       goto_root
     end
@@ -80,6 +86,7 @@ class BlogsController < ApplicationController
     if !valid_blog?(true)
       return
     end
+    session[:blog_id] = params[:id]
     proc_req("editblog")
   end
 
@@ -91,6 +98,29 @@ class BlogsController < ApplicationController
     if !@blog.save
       redirect_to '/write', notice: "An error occured while saving the blog."
     else
+      goto_root
+    end
+  end
+
+  def on_edit_blog
+    if !logged_in? || !session[:blog_id]
+      goto_root
+    end
+
+    @blog = Blog.find_by_id(session[:blog_id])
+    if !@blog || @blog.user_id != @user.id
+      goto_root
+    end
+
+    blog=Blog.new(blog_params)
+    @blog.title = blog.title
+    @blog.contents = blog.contents
+
+    if !@blog.save
+      @blog = Blog.find_by_id(session[:blog_id])
+      redirect_to "/blogs/#{@blog.id}", notice: "An error occured while saving the blog."
+    else
+      session[:blog_id]=nil
       goto_root
     end
   end

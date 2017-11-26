@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get '/logout', to: 'blogs#logout'
   get '/edit', to: 'blogs#edit'
   get '/write', to: 'blogs#write'
+  get '/blogs/:id', to: 'blogs#editblog'
 
   patch '/users', to: 'users#create'
   patch '/blogs', to: 'blogs#create'
