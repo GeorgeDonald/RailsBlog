@@ -2,54 +2,32 @@ require 'pry'
 
 class UsersController < ApplicationController
   def create
-    if(params[:commit] == 'Cancel')
-      session[:dialog_mode] = nil
-      redirect_to '/'
+    binding.pry
+    if(params[:commit] === 'Cancel')
+      goto_root
+      return
+    elsif params[:commit] === "Unregister Me"
+      on_unreg_current_user
       return
     end
 
     if session[:dialog_mode] === 'signin'
-      @user = User.find_by_loginname(login_params[:loginname])
-      if( @user && @user.authenticate(login_params[:password]))
-        session[:user_id] = @user.id
-        session[:dialog_mode] = nil
-        redirect_to '/'
-      else
-        redirect_to '/signin', notice: 'Unknown login name or incrrect password'
-      end
+      on_sign_in
     elsif session[:dialog_mode] === 'signup'
-      @user = User.new(signup_params)
-      if( !@user.valid? )
-        redirect_to '/signup', notice: 'Your information is not valid.'
-      elsif !@user.save_file
-        redirect_to '/signup', notice: 'An error occured on saving image file.'
-      elsif !@user.save
-        redirect_to '/signup', notice: 'An error occured on saving your information into database.'
-      else
-        session[:user_id] = @user.id
-        session[:dialog_mode] = nil
-        redirect_to '/'
-      end
+      on_sign_up
     elsif session[:dialog_mode] === 'edit'
-      user = User.new(signup_params)
-      if( !user.valid? )
-        redirect_to '/signup', notice: 'Your information is not valid.'
-      elsif !user.save_file
-        redirect_to '/signup', notice: 'An error occured on saving image file.'
-      els !@user.save
-        redirect_to '/signup', notice: 'An error occured on saving your information into database.'
-      else
-        session[:user_id] = @user.id
-        session[:dialog_mode] = nil
-        redirect_to '/'
-      end
+      on_edit
     else
-      session[:dialog_mode] = nil
-      redirect_to '/'
+      goto_root
     end
   end
 
   private
+  def goto_root
+    session[:dialog_mode] = nil
+    redirect_to '/'
+  end
+
   def login_params
     params.require(:user).permit(:loginname, :password)
   end
@@ -58,4 +36,63 @@ class UsersController < ApplicationController
     params.require(:user).permit(:loginname, :password, :fullname, :image)
   end
 
+  def on_unreg_current_user
+    if logged_in?
+      @user.destroy
+    end
+    @user=nil
+    session[:user_id] = nil
+    goto_root
+  end
+
+  def on_sign_in
+    @user = User.find_by_loginname(login_params[:loginname])
+    if( @user && @user.authenticate(login_params[:password]))
+      session[:user_id] = @user.id
+      goto_root
+    else
+      redirect_to '/signin', notice: 'Unknown login name or incrrect password'
+    end
+  end
+
+  def on_sign_up
+    @user = User.new(signup_params)
+    if( !@user.valid? )
+      redirect_to '/signup', notice: 'Your information is not valid.'
+    elsif !@user.save_file
+      redirect_to '/signup', notice: 'An error occured on saving image file.'
+    elsif !@user.save
+      redirect_to '/signup', notice: 'An error occured on saving your information into database.'
+    else
+      session[:user_id] = @user.id
+      goto_root
+    end
+  end
+
+  def on_edit
+    if !logged_in?
+      goto_root
+      return
+    end
+
+    user = User.new(signup_params)
+    if user.image && !user.save_file
+      redirect_to '/edit', notice: 'An error occured on saving image file.'
+    else
+      @user.loginname = user.loginname
+      @user.fullname = user.fullname
+      @user.password = user.password
+      @user.image = user.image
+      if !@user.save
+        @user = User.find_by_id(session[:user_id])
+        if @user != nil
+          redirect_to '/edit', notice: 'An error occured on saving your information into database.'
+        else
+          goto_root
+        end
+      else
+        goto_root
+      end
+    end
+  end
 end

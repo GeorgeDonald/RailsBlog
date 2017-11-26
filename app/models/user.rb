@@ -8,19 +8,23 @@ class User < ApplicationRecord
   validates :loginname, length: {in: 6..20}
   has_many :blogs, dependent: :destroy
 
-  # I copied the following code from:
-  # https://stackoverflow.com/questions/22247582/rails-4-saving-images-in-database
-  # and did some modifications
-  def image= (fileobj)
-    if fileobj.size > 0
-      @image_file = fileobj
-      @image_file_name = unique_and_proper_filename(fileobj.original_filename)
+  def initialize(args = nil)
+    super
+    if args != nil && args['image'] != nil
+      fileobj = args['image']
+      if fileobj.size > 0
+        @image_file = fileobj
+        self.image = unique_and_proper_filename(fileobj.original_filename)
+      end
     end
   end
 
+  # I copied the following code from:
+  # https://stackoverflow.com/questions/22247582/rails-4-saving-images-in-database
+  # and did some modifications
   def save_file
     # Bilddatei save
-    if !save_uploaded_file(@image_file, 'images', @image_file_name)
+    if !save_uploaded_file(@image_file, 'images', self.image)
       return false
     end
     true
