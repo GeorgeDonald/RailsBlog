@@ -2,7 +2,6 @@ require 'pry'
 
 class UsersController < ApplicationController
   def create
-    binding.pry
     if(params[:commit] === 'Cancel')
       goto_root
       return
@@ -23,11 +22,6 @@ class UsersController < ApplicationController
   end
 
   private
-  def goto_root
-    session[:dialog_mode] = nil
-    redirect_to '/'
-  end
-
   def login_params
     params.require(:user).permit(:loginname, :password)
   end
@@ -39,6 +33,7 @@ class UsersController < ApplicationController
   def on_unreg_current_user
     if logged_in?
       @user.destroy
+      @user.delete_file
     end
     @user=nil
     session[:user_id] = nil
@@ -46,6 +41,11 @@ class UsersController < ApplicationController
   end
 
   def on_sign_in
+    if logged_in?
+      goto_root
+      return
+    end
+
     @user = User.find_by_loginname(login_params[:loginname])
     if( @user && @user.authenticate(login_params[:password]))
       session[:user_id] = @user.id
@@ -56,6 +56,11 @@ class UsersController < ApplicationController
   end
 
   def on_sign_up
+    if logged_in?
+      goto_root
+      return
+    end
+
     @user = User.new(signup_params)
     if( !@user.valid? )
       redirect_to '/signup', notice: 'Your information is not valid.'
@@ -79,6 +84,7 @@ class UsersController < ApplicationController
     if user.image && !user.save_file
       redirect_to '/edit', notice: 'An error occured on saving image file.'
     else
+      tempuser = @user.deep_dup
       @user.loginname = user.loginname
       @user.fullname = user.fullname
       @user.password = user.password
@@ -91,6 +97,7 @@ class UsersController < ApplicationController
           goto_root
         end
       else
+        tempuser.delete_file
         goto_root
       end
     end

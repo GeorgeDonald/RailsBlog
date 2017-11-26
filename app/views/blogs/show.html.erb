@@ -1,0 +1,44 @@
+<% if(session[:dialog_mode] === 'signin' ||
+  session[:dialog_mode] === 'signup' ||
+  session[:dialog_mode] === 'edit' ||
+  session[:dialog_mode] === 'show') %>
+<%= render 'login_form' %>
+<% elsif session[:dialog_mode] === 'write' ||
+    session[:dialog_mode] === 'editblog' ||
+    session[:dialog_mode] === 'comment' %>
+<%= render 'write_blog_form' %>
+<% end %>
+
+<h1>Blogs</h1>
+<%
+from = 0;
+from = session[:from] if session[:from] != nil
+to = from + 10
+to = @blogs.length - 1 if to >= @blogs.length
+(from..to).each do |i|
+  blog = @blogs[i]
+  user = User.find_by_id(blog.user_id)
+%>
+<div class="blog_item">
+  <div class="blog_outline">
+    <div class="blog_image">
+      <img src="/images/<%=user.image%>" alt="user_image">
+    </div>
+    <div class="blog_info">
+      <div class="blog_title">
+        <%=blog.title%>
+      </div>
+      <div class="blog_edit">
+        <%= link_to 'Comment', "/comments/#{blog.id}", {method: 'post', local: true} if logged_in? %>
+        <% if logged_in? && user.id == @user.id %>
+          <%= link_to 'Delete', "/blogs/#{blog.id}", {method: 'delete', local: true} %>
+          <%= link_to 'Edit', "/blogs/#{blog.id}", {method: 'patch', local: true} %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="blog_body">
+    <%=blog.contents%>
+  </div>
+</div>
+<% end %>

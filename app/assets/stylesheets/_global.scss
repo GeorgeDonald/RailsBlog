@@ -23,3 +23,34 @@ $clrModelFont: white;
   left: calc( (100vw - 400px) / 2);
   top: calc( (100vh - 104px) / 2 );
 }
+
+.blog form {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  left: calc( (100vw - 800px) / 2);
+  top: calc( (100vh - 600px) / 2 );
+  label {
+    width: 700px;
+  }
+  textarea, .blog_title input {
+    width: 700px;
+  }
+  textarea {
+    height: 560px;
+  }
+}
+
+.blog_item {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  .blog_outline {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    div img {
+      width: 100%;
+      height: 100%;
+      background-size: 100% 100%;
+    }
+  }
+}

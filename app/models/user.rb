@@ -30,10 +30,22 @@ class User < ApplicationRecord
     true
   end
 
+  def delete_file
+    delete_uploaded_file('images',self.image)
+  end
+
   private
 
   def unique_and_proper_filename(filename)
     Time.now.to_i.to_s + "_" + File.basename(filename)
+  end
+
+  def delete_uploaded_file(filepath,filename)
+    complete_path = "#{Rails.public_path}/#{filepath}/#{filename}"
+    begin
+      File.delete(complete_path)
+    rescue
+    end
   end
 
   def save_uploaded_file(fileobj, filepath, filename)

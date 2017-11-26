@@ -24,7 +24,6 @@
     <% end %>
 
     <div class="form_group login_signin">
-      <input type="hidden" name="" value="">
       <%= f.submit session[:dialog_mode] === 'signin' ? "Sign in" :
         session[:dialog_mode] === 'signup' ? 'Sign up' : 'Update' %>
       <%= f.submit "Cancel" %>
