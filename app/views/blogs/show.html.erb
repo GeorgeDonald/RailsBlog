@@ -32,8 +32,9 @@ to = @blogs.length - 1 if to >= @blogs.length
         <%=blog.title%>
       </div>
       <div class="blog_edit">
-        @<%= user.fullname %> ---- <%= blog.updated_at.to_time.to_formatted_s(:db) %>
-        <br>
+        @<%= user.fullname %> ----
+        <div class="blog_time"><%= blog.updated_at %></div>
+          <br>
         <%= link_to 'Comment', "/comments/#{blog.id}", {method: 'post', local: true} if logged_in? %>
         <% if logged_in? && user.id == @user.id %>
           <%= link_to 'Delete', "/blogs/#{blog.id}", {method: 'delete', local: true} %>
@@ -55,7 +56,8 @@ to = @blogs.length - 1 if to >= @blogs.length
         </div>
         <div class="blog_info">
           <div class="blog_title">
-            @<%= cuser.fullname %>
+            @<%= cuser.fullname %> ----
+            <div class="blog_time"><%= comment.updated_at %></div>
           </div>
           <div class="blog_edit">
             <% if logged_in? && cuser.id == @user.id %>
