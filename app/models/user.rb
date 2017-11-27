@@ -7,6 +7,7 @@ class User < ApplicationRecord
   validates :password, length: {in: 6..20}
   validates :loginname, length: {in: 6..20}
   has_many :blogs, dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   def initialize(args = nil)
     super
