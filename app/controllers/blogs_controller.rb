@@ -105,14 +105,6 @@ class BlogsController < ApplicationController
     goto_root
   end
 
-  def editblog
-    if !valid_blog?(true)
-      return
-    end
-    session[:blog_id] = params[:id]
-    proc_req("editblog")
-  end
-
   def nextpage
     if session[:from_number] == nil
       session[:from_number] = 0
@@ -129,6 +121,14 @@ class BlogsController < ApplicationController
       session[:from_number] -= 10
     end
     goto_root
+  end
+
+  def editblog
+    if !valid_blog?(true)
+      return
+    end
+    session[:blog_id] = params[:id]
+    proc_req("editblog")
   end
 
   private
