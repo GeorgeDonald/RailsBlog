@@ -1,6 +1,32 @@
 $clrModelBk: rgba(20,20,160,0.8);
 $clrModelFont: white;
 
+body nav {
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 80px;
+  background: white;
+  opacity: 1;
+}
+
+body article {
+  margin-top: 90px;
+}
+
+.nav_button {
+  display: inline-block;
+  text-decoration: none;
+  top: 48px;
+  height: 32px;
+  width: 120px;
+  background-color: blue;
+  color: white;
+  cursor: pointer;
+  text-align: center;
+  line-height: 32px;
+}
+
 .hidden {
   display: none;
 }
