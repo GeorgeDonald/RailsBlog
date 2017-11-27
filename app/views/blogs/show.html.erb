@@ -70,7 +70,7 @@ to = @blogs.length - 1 if to >= @blogs.length
     <% end %>
   </div>
 </div>
+<% end %>
 <% session[:from_number] = from %>
 <%= link_to "Prev Page", "/blogs/prev", {method: 'post', local: true} if from > 0 %>
 <%= link_to "Next Page", "/blogs/next", {method: 'post', local: true} if to < @blogs.length-1 %>
-<% end %>
