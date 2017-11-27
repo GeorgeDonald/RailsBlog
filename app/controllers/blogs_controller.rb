@@ -113,6 +113,24 @@ class BlogsController < ApplicationController
     proc_req("editblog")
   end
 
+  def nextpage
+    if session[:from_number] == nil
+      session[:from_number] = 0
+    else
+      session[:from_number] += 10
+    end
+    goto_root
+  end
+
+  def prevpage
+    if session[:from_number] == nil
+      session[:from_number] = 0
+    else
+      session[:from_number] -= 10
+    end
+    goto_root
+  end
+
   private
   def show_blogs
     if !logged_in?
@@ -176,7 +194,7 @@ class BlogsController < ApplicationController
   end
 
   def get_blogs
-    @blogs =Blog.all
+    @blogs =Blog.all.reverse
   end
 
   def blog_params

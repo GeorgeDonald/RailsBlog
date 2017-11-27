@@ -14,8 +14,8 @@
 <h1>Blogs</h1>
 <%
 from = 0;
-from = session[:from] if session[:from] != nil
-to = from + 10
+from = session[:from_number] if session[:from_number] != nil
+to = from + 9
 to = @blogs.length - 1 if to >= @blogs.length
 (from..to).each do |i|
   blog = @blogs[i]
@@ -31,7 +31,8 @@ to = @blogs.length - 1 if to >= @blogs.length
         <%=blog.title%>
       </div>
       <div class="blog_edit">
-        @<%= user.fullname %>
+        @<%= user.fullname %> ---- <%= blog.updated_at.to_time.to_formatted_s(:db) %>
+        <br>
         <%= link_to 'Comment', "/comments/#{blog.id}", {method: 'post', local: true} if logged_in? %>
         <% if logged_in? && user.id == @user.id %>
           <%= link_to 'Delete', "/blogs/#{blog.id}", {method: 'delete', local: true} %>
@@ -69,4 +70,7 @@ to = @blogs.length - 1 if to >= @blogs.length
     <% end %>
   </div>
 </div>
+<% session[:from_number] = from %>
+<%= link_to "Prev Page", "/blogs/prev", {method: 'post', local: true} if from > 0 %>
+<%= link_to "Next Page", "/blogs/next", {method: 'post', local: true} if to < @blogs.length-1 %>
 <% end %>
