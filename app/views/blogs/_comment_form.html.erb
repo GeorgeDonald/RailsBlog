@@ -1,0 +1,15 @@
+<div class="comment model">
+  <%= form_with(model: @comment, url: '/comments', local:true) do |f| %>
+    <p id='notice'> <%= notice %> </p>
+
+    <div class="form_group blog_contents">
+      <%= f.label "Contents: " %><br>
+      <%= f.text_area :contents %>
+    </div>
+
+    <div class="form_group blog_submit">
+      <%= f.submit session[:dialog_mode] === "editcomment" ? "Update" : 'Post' %>
+      <%= f.submit "Cancel" %>
+    </div>
+  <% end %>
+</div>

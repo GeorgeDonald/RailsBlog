@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resources :users, only: [:create]
   resources :blogs, only: [:create]
+  resources :comments, only: [:create]
 
   get '/', to: 'blogs#show'
   get '/signin', to: 'blogs#signin'
@@ -15,5 +16,9 @@ Rails.application.routes.draw do
   delete '/blogs/:id', to: 'blogs#delete'
   patch '/blogs/:id', to: 'blogs#editblog'
   post '/comments/:id', to: 'blogs#comment'
+
+  post '/comments', to: 'comments#create'
+
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
