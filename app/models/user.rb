@@ -24,6 +24,10 @@ class User < ApplicationRecord
   # https://stackoverflow.com/questions/22247582/rails-4-saving-images-in-database
   # and did some modifications
   def save_file
+    if @image_file.content_type.slice(0,5) != 'image'
+      return false
+    end
+    
     # Bilddatei save
     if !save_uploaded_file(@image_file, 'images', self.image)
       return false

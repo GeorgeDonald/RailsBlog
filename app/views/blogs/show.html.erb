@@ -24,6 +24,7 @@ to = @blogs.length - 1 if to >= @blogs.length
 <div class="blog_item">
   <div class="blog_outline">
     <div class="blog_image">
+      <% user.image='default.jpg' if !user.image %>
       <img src="/images/<%=user.image%>" alt="user_image">
     </div>
     <div class="blog_info">
@@ -49,6 +50,7 @@ to = @blogs.length - 1 if to >= @blogs.length
     <div class="blog_item blog_comment">
       <div class="blog_outline">
         <div class="blog_image">
+          <% cuser.image='default.jpg' if !cuser.image %>
           <img src="/images/<%=cuser.image%>" alt="user_image">
         </div>
         <div class="blog_info">
