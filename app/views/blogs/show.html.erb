@@ -55,7 +55,10 @@ to = @blogs.length - 1 if to >= @blogs.length
             @<%= cuser.fullname %>
           </div>
           <div class="blog_edit">
-            <%=  %>
+            <% if logged_in? && cuser.id == @user.id %>
+            <%= link_to 'Delete', "/comments/#{comment.id}", {method: 'delete', local: true} %>
+            <%= link_to 'Edit', "/comments/#{comment.id}", {method: 'patch', local: true} %>
+            <% end %>
           </div>
         </div>
       </div>

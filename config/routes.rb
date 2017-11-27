@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   get '/edit', to: 'blogs#edit'
   get '/write', to: 'blogs#write'
   get '/blogs/:id', to: 'blogs#editblog'
+  get '/comments/:id', to: 'blogs#showcomment'
 
   patch '/users', to: 'users#create'
   patch '/blogs', to: 'blogs#create'
@@ -18,7 +19,9 @@ Rails.application.routes.draw do
   post '/comments/:id', to: 'blogs#comment'
 
   post '/comments', to: 'comments#create'
-
+  patch '/comments', to: 'comments#create'
+  delete '/comments/:id', to: 'comments#delete'
+  patch '/comments/:id', to: 'blogs#editcomment'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

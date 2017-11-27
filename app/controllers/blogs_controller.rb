@@ -48,7 +48,28 @@ class BlogsController < ApplicationController
   end
 
   def editblog
-    render :show
+    show_blogs
+  end
+
+  def showcomment
+    show_blogs
+  end
+
+  def editcomment
+    binding.pry
+
+    if !logged_in?
+      goto_root
+      return
+    end
+
+    @comment = Comment.find_by_id(params[:id])
+    if @comment.user_id != @user.id
+      goto_root
+      return
+    end
+    session[:comment_id] = params[:id]
+    proc_req("editcomment")
   end
 
   def create
@@ -70,6 +91,8 @@ class BlogsController < ApplicationController
 
   def comment
     if valid_blog?
+      session[:blog_id] = params[:id]
+      @comment = Comment.new
       proc_req("comment")
     end
   end
@@ -91,6 +114,14 @@ class BlogsController < ApplicationController
   end
 
   private
+  def show_blogs
+    if !logged_in?
+      redirect_to '/'
+    else
+      render :show
+    end
+  end
+
   def on_write_blog
     @blog = Blog.new(blog_params)
     @blog.user_id = session[:user_id]
