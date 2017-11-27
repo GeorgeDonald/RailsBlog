@@ -23,5 +23,8 @@ Rails.application.routes.draw do
   delete '/comments/:id', to: 'comments#delete'
   patch '/comments/:id', to: 'blogs#editcomment'
 
+  post '/blogs/next', to: 'blogs#nextpage'
+  post '/blogs/prev', to: 'blogs#prevpage'
+  
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
