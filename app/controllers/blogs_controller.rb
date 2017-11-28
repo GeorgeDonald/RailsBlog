@@ -52,6 +52,7 @@ class BlogsController < ApplicationController
   end
 
   def showcomment
+    binding.pry
     show_blogs
   end
 

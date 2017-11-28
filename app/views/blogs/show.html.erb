@@ -32,12 +32,13 @@ to = @blogs.length - 1 if to >= @blogs.length
         <%=blog.title%>
       </div>
       <div class="blog_edit">
-        @<%= user.fullname %> ---- <%= blog.updated_at.to_time.to_formatted_s(:db) %>
-        <br>
-        <%= link_to 'Comment', "/comments/#{blog.id}", {method: 'post', local: true} if logged_in? %>
+        @<%= user.fullname %> ----
+        <div class="blog_time"><%= blog.updated_at %></div>
+          <br>
+        <%= link_to 'Comment', "/comments/#{blog.id}", method: :post if logged_in? %>
         <% if logged_in? && user.id == @user.id %>
-          <%= link_to 'Delete', "/blogs/#{blog.id}", {method: 'delete', local: true} %>
-          <%= link_to 'Edit', "/blogs/#{blog.id}", {method: 'patch', local: true} %>
+          <%= link_to 'Delete', "/blogs/#{blog.id}", method: :delete %>
+          <%= link_to 'Edit', "/blogs/#{blog.id}", method: :patch %>
         <% end %>
       </div>
     </div>
@@ -55,12 +56,13 @@ to = @blogs.length - 1 if to >= @blogs.length
         </div>
         <div class="blog_info">
           <div class="blog_title">
-            @<%= cuser.fullname %>
+            @<%= cuser.fullname %> ----
+            <div class="blog_time"><%= comment.updated_at %></div>
           </div>
           <div class="blog_edit">
             <% if logged_in? && cuser.id == @user.id %>
-            <%= link_to 'Delete', "/comments/#{comment.id}", {method: 'delete', local: true} %>
-            <%= link_to 'Edit', "/comments/#{comment.id}", {method: 'patch', local: true} %>
+            <%= link_to 'Delete', "/comments/#{comment.id}", method: :delete, local: true %>
+            <%= link_to 'Edit', "/comments/#{comment.id}", method: :patch, local: true %>
             <% end %>
           </div>
         </div>
@@ -74,5 +76,5 @@ to = @blogs.length - 1 if to >= @blogs.length
 </div>
 <% end %>
 <% session[:from_number] = from %>
-<%= link_to "Prev Page", "/blogs/prev", {method: 'post', local: true} if from > 0 %>
-<%= link_to "Next Page", "/blogs/next", {method: 'post', local: true} if to < @blogs.length-1 %>
+<%= link_to "Prev Page", "/prev", method: :post if from > 0 %>
+<%= link_to "Next Page", "/next", method: :post if to < @blogs.length-1 %>
