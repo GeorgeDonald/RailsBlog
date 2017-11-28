@@ -50,7 +50,7 @@ body article {
   top: calc( (100vh - 104px) / 2 );
 }
 
-.blog form {
+.blog form, .comment form {
   position: relative;
   width: 800px;
   height: 600px;

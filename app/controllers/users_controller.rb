@@ -64,7 +64,7 @@ class UsersController < ApplicationController
     @user = User.new(signup_params)
     if( !@user.valid? )
       redirect_to '/signup', notice: 'Your information is not valid.'
-    elsif !@user.save_file
+    elsif @user.image && !@user.save_file
       redirect_to '/signup', notice: 'An error occured on saving image file.'
     elsif !@user.save
       redirect_to '/signup', notice: 'An error occured on saving your information into database.'

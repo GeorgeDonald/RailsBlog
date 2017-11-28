@@ -52,13 +52,10 @@ class BlogsController < ApplicationController
   end
 
   def showcomment
-    binding.pry
     show_blogs
   end
 
   def editcomment
-    binding.pry
-
     if !logged_in?
       goto_root
       return
