@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root 'blogs#show'
   resources :users, only: [:create]
   resources :blogs, only: [:create]
   resources :comments, only: [:create]
